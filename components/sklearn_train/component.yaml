@@ -1,0 +1,22 @@
+name: Scikit Learn Trainer
+description: Trains a scikit learn model
+inputs:
+  - {name: Training Data Path}
+  - {name: Test Data Path}
+  - {name: Output Dir}
+  - {name: Estimator Name}
+  - {name: Hyperparameters}
+outputs:
+  - {name: Output Dir}
+implementation:
+  container: 
+    image: gcr.io/kf-pipeline-contrib/sklearn@sha256:ab130b6885b7c117c5b921c4e2577865857e7cf7843cdb08f6c3cf0648b0d76f
+    command: [ 
+      python, /app/src/task.py,
+      '--training_data_path', {inputValue: Training Data Path},
+      --test_data_path, {inputValue: Test Data Path},
+      --output_dir, {inputValue: Output Dir},
+      --estimator_name, {inputValue: Estimator Name},
+      --hyperparameters, {inputValue: Hyperparameters},
+      --output_dir_path, {outputPath: Output Dir}
+    ]

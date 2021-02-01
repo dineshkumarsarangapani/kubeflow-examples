@@ -1,0 +1,17 @@
+name: Split Files
+description: Splits a given file based on number of lines
+inputs:
+  - {name: Input Path}
+  - {name: Number of lines to split}
+  - {name: Output path}
+outputs:
+  - {name: Output Dir}
+implementation:
+  container: 
+    image: dineshkumarsarangapani/kubeflow-pipeline:step1
+    command: [ 
+      python, /pipelines/component/src/split_file.py,
+      --input1-path, {inputValue: Input Path},
+      --param1, {inputValue: Number of lines to split},
+      --output1-path, {inputValue: Output path}
+    ]
