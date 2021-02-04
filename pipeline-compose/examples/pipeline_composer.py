@@ -1,6 +1,7 @@
 import os
 
 import kfp
+from kfp import dsl
 
 component_root = '../components/split_file/'
 
@@ -12,12 +13,24 @@ dummy_op = kfp.components.load_component_from_file(os.path.join(component_root, 
 
 # Define a pipeline and create a task from a component:
 def my_pipeline(input_path_pipeline: str, number_of_lines: int):
+    vop = dsl.VolumeOp(
+        name="mypvc",
+        resource_name="newpvc",
+        size="10Gi",
+        modes=dsl.VOLUME_MODE_RWM
+    )
+
     dummy1_task = dummy_op(
         # Input name "Input 1" is converted to pythonic parameter name "input_1"
         input_path=input_path_pipeline,
-        number_of_lines_to_split=number_of_lines,
-        output_path="/tmp/output"
+        number_of_lines_to_split=number_of_lines
     )
+
+    dummy2_task = dummy_op(
+        # Input name "Input 1" is converted to pythonic parameter name "input_1"
+        input_path=dummy1_task.outputs['output_path'],
+        number_of_lines_to_split="2",
+    ).after(dummy1_task).set_display_name('Split File 2')
     # The outputs of the dummy1_task can be referenced using the
     # dummy1_task.outputs dictionary: dummy1_task.outputs['output_1']
     # ! The output names are converted to pythonic ("snake_case") names.

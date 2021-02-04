@@ -1,0 +1,15 @@
+name: Train in Minst
+description: Train the minst
+inputs:
+  - {name: Data Path}
+  - {name: Model file}
+outputs:
+  - {name: MLPipeline Metrics, type: Metrics}
+implementation:
+  container: 
+    image: dineshkumarsarangapani/kubeflow-pipeline:minst-train
+    command: [ 
+      python, /pipelines/component/src/train.py,
+      --data-path, {inputValue: Data Path},
+      --model-file, {inputValue: Model file}
+    ]
