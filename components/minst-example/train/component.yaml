@@ -7,9 +7,11 @@ outputs:
   - {name: MLPipeline Metrics, type: Metrics}
 implementation:
   container: 
-    image: dineshkumarsarangapani/kubeflow-pipeline:minst-train
+    image: dineshkumarsarangapani/kubeflow-pipeline@sha256:cf3a8d35ddce8adefd01e5caac8fe385e09d614deea8527e8355cb7ae41594a7
     command: [ 
       python, /pipelines/component/src/train.py,
       --data-path, {inputValue: Data Path},
       --model-file, {inputValue: Model file}
     ]
+    fileOutputs:
+      MLPipeline Metrics: /mlpipeline-metrics.json
